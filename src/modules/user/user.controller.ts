@@ -5,14 +5,14 @@ const createUser = async (req: Request, res: Response) => {
   try {
     const result = await userServices.createUser(req.body);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Data Inserted Successfully",
       data: result.rows[0],
     });
   } catch (err: any) {
     console.log(err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: err.message,
     });
@@ -23,16 +23,15 @@ const getUser = async (req: Request, res: Response) => {
   try {
     const result = await userServices.getUser();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Users retrieved successfully",
       data: result.rows,
     });
   } catch (err: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: err.message,
-      details: err,
     });
   }
 };
@@ -51,13 +50,13 @@ const getSingleUser = async (
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "User fetched successfully",
       data: result.rows[0],
     });
   } catch (err: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: err.message,
     });
@@ -70,12 +69,15 @@ const updateUser = async (
 ) => {
   const { name, email } = req.body;
 
+  if (!name || !email) {
+    return res.status(400).json({
+      success: false,
+      message: "Name and email are required",
+    });
+  }
+
   try {
-    const result = await userServices.updateUser(
-      name,
-      email,
-      req.params.id
-    );
+    const result = await userServices.updateUser(name, email, req.params.id);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -84,13 +86,13 @@ const updateUser = async (
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "User updated successfully",
       data: result.rows[0],
     });
   } catch (err: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: err.message,
     });
@@ -104,20 +106,20 @@ const deleteUser = async (
   try {
     const result = await userServices.deleteUser(req.params.id);
 
-    if (result.rowCount === 0) {
+    if (!result.rowCount) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "User deleted successfully",
       data: result.rows,
     });
   } catch (err: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: err.message,
     });
