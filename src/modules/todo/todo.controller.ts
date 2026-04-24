@@ -36,7 +36,7 @@ const getTodos = async (req: Request, res: Response) => {
   }
 };
 
-const getSingleTodo = async (req: Request, res: Response) => {
+const getSingleTodo = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const result = await todoServices.getSingleTodo(req.params.id!);
 
@@ -51,7 +51,7 @@ const getSingleTodo = async (req: Request, res: Response) => {
   }
 };
 
-const updateTodo = async (req: Request, res: Response) => {
+const updateTodo = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const result = await todoServices.updateTodo(req.body, req.params.id!);
 
@@ -66,7 +66,7 @@ const updateTodo = async (req: Request, res: Response) => {
   }
 };
 
-const deleteTodo = async (req: Request, res: Response) => {
+const deleteTodo = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const result = await todoServices.deleteTodo(req.params.id!);
 
